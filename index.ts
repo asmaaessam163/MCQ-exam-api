@@ -1,14 +1,25 @@
+//@ts-ignore
 const express = require("express");
-const path = require("path");
+//@ts-ignore
+const mongoose = require("mongoose");
+const routes = require("./routers");
+var cors = require("cors");
 
-const app = express();
 const port = process.env.PORT || "8000";
+const username = "asmaa_essam";
+const password = "Asmaa312411";
+const cluster = "cluster0";
+const dbname = "default";
 
-app.get("/", (req, res) => {
-  console.log("start");
-  res.status(200).send();
-});
+const uri = `mongodb+srv://${username}:${password}@${cluster}.tqhsf.mongodb.net/${dbname}?retryWrites=true&w=majority`;
 
-app.listen(port, () => {
-  console.log(`Listening to requests on http://localhost:${port}`);
+// Connect to MongoDB database
+mongoose.connect(uri, { useNewUrlParser: true }).then(() => {
+  const app = express();
+  app.use(cors());
+  app.use("/", routes);
+
+  app.listen(port, () => {
+    console.log("Server has started!");
+  });
 });
